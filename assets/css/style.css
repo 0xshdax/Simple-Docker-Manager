@@ -1,0 +1,59 @@
+body	{
+	background-color:#32383E;
+	font-family: 'Cutive Mono', serif;
+	font-size:100%;
+	line-height:250%;
+}
+
+input {
+	background: #32383E;
+	border: none;
+	display: block;
+	width: 300px;
+	height: 30px;
+	margin:auto;
+	margin-top:15px;
+	padding-top:15px;
+	margin-bottom:10px;
+	padding-bottom:10px;
+	padding: 10px;
+	color: #fff;
+	box-shadow: 0 1px 5px 1px #27f6a4;
+}
+
+#nav {
+	color: white;
+	text-align:center;
+	margin:auto;
+	margin-top:15px;
+	padding-top:15px;
+	margin-bottom:10px;
+	padding-bottom:10px;
+}
+
+#title_app {
+	color: white;
+	text-align:center;
+}
+
+#login {
+	text-align:center;
+	margin-bottom:10px;
+	padding-bottom:10px;
+}
+
+#footer {
+	text-align:center;
+	font-size:1em;
+}
+
+#img-circle {
+	width: 150px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	border: 2px solid #27f6a4;
+	border-radius: 500px;
+	-webkit-border-radius: 500px;
+	-moz-border-radius: 500px;
+}
