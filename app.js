@@ -8,13 +8,13 @@ const bcrypt = require('bcrypt');
 const app = express();
 const helpers = require('./helpers');
 
-const auth = function (req, res, next) {
-  if (req.session && req.session.user === "admin" && req.session.admin) {
-    return next();
-  } else {
-    return res.status(401).send('Unauthorized');
-  }
-};
+// const auth = function (req, res, next) {
+//   if (req.session && req.session.user === "admin" && req.session.admin) {
+//     return next();
+//   } else {
+//     return res.status(401).send('Unauthorized');
+//   }
+// };
 
 const secret = crypto.randomBytes(64).toString('hex');
 
@@ -34,7 +34,11 @@ app.use(session({
 }));
 
 app.get('/', (req, res) => {
-  res.render('views/login');
+  if(req.session.admin === true) {
+    res.redirect('/dashboard');
+  } else {
+    res.render('views/login');
+  }
 });
 
 app.post('/login', (req, res) => {
@@ -63,7 +67,7 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
-app.get('/dashboard', auth, function (req, res) {
+app.get('/dashboard', helpers.auth, function (req, res) {
   res.render('views/dashboard');
 });
 
