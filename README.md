@@ -1,6 +1,6 @@
 # Simple-Docker-Manager
 
-SDM (Simple Docker Manager) adalah aplikasi berbasis web untuk melakukan manajemen Container pada Docker. Aplikasi ini belum sempurna dan belum dapat digunakan dikarenakan tahap masih pengembangan.
+Simple Docker Manager (SDM) is a web-based application for managing Containers on Docker. This application is not yet complete and cannot be used due to the development stage.
 
 ## Installation
 
