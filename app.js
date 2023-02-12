@@ -8,14 +8,6 @@ const bcrypt = require('bcrypt');
 const app = express();
 const helpers = require('./helpers');
 
-// const auth = function (req, res, next) {
-//   if (req.session && req.session.user === "admin" && req.session.admin) {
-//     return next();
-//   } else {
-//     return res.status(401).send('Unauthorized');
-//   }
-// };
-
 const secret = crypto.randomBytes(64).toString('hex');
 
 app.set('views', path.join(__dirname, 'public'));
