@@ -61,8 +61,8 @@ app.get('/logout', function (req, res) {
 
 app.get('/dashboard', helpers.auth, async (req, res) => {
   try {
-    const [ID, Names] = await Promise.all([helpers.exec('docker ps --format "{{.ID}}"'), helpers.exec('docker ps --format "{{.Names}}"')])
-    res.render('views/dashboard', { ID: ID, Names: Names });
+    const output = await helpers.exec('docker ps --format "{{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Command}}\t{{.CreatedAt}}\t{{.Status}}\t{{.Ports}}"');
+    res.render('views/dashboard', { output: output });
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred');

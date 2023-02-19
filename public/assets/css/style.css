@@ -1,8 +1,8 @@
-body	{
-	background-color:#32383E;
+body {
+	background-color: #32383E;
 	font-family: 'Cutive Mono', serif;
-	font-size:100%;
-	line-height:250%;
+	font-size: 100%;
+	line-height: 250%;
 }
 
 input {
@@ -11,40 +11,71 @@ input {
 	display: block;
 	width: 300px;
 	height: 30px;
-	margin:auto;
-	margin-top:15px;
-	padding-top:15px;
-	margin-bottom:10px;
-	padding-bottom:10px;
+	margin: auto;
+	margin-top: 15px;
+	padding-top: 15px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
 	padding: 10px;
 	color: #fff;
 	box-shadow: 0 1px 5px 1px #27f6a4;
 }
 
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+td, th {
+	border: 2px solid #dddddd;
+	text-align: center;
+	padding: 4px;
+}
+
+a:link, a:visited {
+	text-decoration: none;
+	color: #27f6a4;
+}
+
+#main {
+	width: 75%;
+	margin: 0 auto;
+}
+
+#content-left {
+	color: white;
+	text-align: left;
+	margin: auto;
+	padding-top: 10px;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+}
+
 #nav {
 	color: white;
-	text-align:center;
-	margin:auto;
-	margin-top:15px;
-	padding-top:15px;
-	margin-bottom:10px;
-	padding-bottom:10px;
+	text-align: center;
+	margin: auto;
+	margin-top: 15px;
+	padding-top: 15px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
 }
 
 #title_app {
 	color: white;
-	text-align:center;
+	text-align: center;
 }
 
 #login {
-	text-align:center;
-	margin-bottom:10px;
-	padding-bottom:10px;
+	text-align: center;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
 }
 
 #footer {
-	text-align:center;
-	font-size:1em;
+	text-align: center;
+	font-size: 1em;
 }
 
 #img-circle {
