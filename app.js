@@ -59,8 +59,14 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
-app.get('/dashboard', helpers.auth, function (req, res) {
-  res.render('views/dashboard');
+app.get('/dashboard', helpers.auth, async (req, res) => {
+  try {
+    const [ID, Names] = await Promise.all([helpers.exec('docker ps --format "{{.ID}}"'), helpers.exec('docker ps --format "{{.Names}}"')])
+    res.render('views/dashboard', { ID: ID, Names: Names });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  }
 });
 
 app.listen(3000, () => {

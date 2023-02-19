@@ -1,1 +1,37 @@
-<h1>This dashboards</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <h1>Docker Containers</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Container ID</th>
+                <th>Container Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (!ID || !Names) { %>
+            <tr>
+                <td colspan="2">No containers are currently running</td>
+            </tr>
+            <% } else { %>
+            <% var IDArray = ID.split('\n') %>
+            <% for (let i = 0; i < IDArray.length; i++) { %>
+            <% let item1 = IDArray[i] %>
+            <% let item2 = Names.split('\n')[i] %>
+            <tr>
+                <td><%= item1 %></td>
+                <td><%= item2 %></td>
+            </tr>
+            <% } %>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+
+</html>
