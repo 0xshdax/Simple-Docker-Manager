@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>SDM - Dashboard</title>
     <meta charset="utf-8">
@@ -11,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
-
 <body>
     <div id="main">
         <div id="nav">
@@ -21,44 +19,26 @@
         </div>
         <div id="content-left">
             <h2>Docker Containers</h2>
-            <table>
+            <table id="container-table">
                 <thead>
                     <tr>
                         <th>Container ID</th>
-                        <th>Container Name</th>
                         <th>Image</th>
-                        <th>Command</th>
-                        <th>Created</th>
                         <th>Status</th>
                         <th>Ports</th>
+                        <th>Container Name</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <% if (!output) { %>
-                        <tr>
-                            <td colspan="7">No containers are currently running</td>
-                        </tr>
-                    <% } else { %>
-                        <% var outputArray = output.trim().split('\n') %>
-                        <% for (let i = 0; i < outputArray.length; i++) { %>
-                            <% let row = outputArray[i].split('\t') %>
-                            <tr>
-                                <td><%= row[0] %></td>
-                                <td><%= row[1] %></td>
-                                <td><%= row[2] %></td>
-                                <td><%= row[3] %></td>
-                                <td><%= row[4] %></td>
-                                <td><%= row[5] %></td>
-                                <td><%= row[6] %></td>
-                                <td>XXXXX</td>
-                            </tr>
-                        <% } %>
-                    <% } %>
+                <tbody id="container-table-body">
+                    <tr>
+                        <td colspan="6">Loading...</td>
+                    </tr>
                 </tbody>
-            </table>            
+            </table>
         </div>
     </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/js/dashboard.js"></script>
 </body>
-
 </html>
