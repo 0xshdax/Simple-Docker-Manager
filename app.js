@@ -13,19 +13,12 @@ const helpers = require('./helpers');
 const secret = crypto.randomBytes(64).toString('hex');
 const port = process.env.PORT || 3000;
 
-app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io', 'client-dist')));
 app.set('views', path.join(__dirname, 'public'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
-app.use(session({
-  secret: secret,
-  resave: true,
-  saveUninitialized: true
-}));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({ secret, resave: true, saveUninitialized: true }));
 
 app.get('/', (req, res) => {
   if (req.session.admin === true) {
@@ -36,8 +29,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const { username, password } = req.body;
   if (username === 'admin') {
     const hashedPassword = await bcrypt.hash(process.env.SDM_PWD, 10);
     if (await bcrypt.compare(password, hashedPassword)) {
@@ -45,14 +37,10 @@ app.post('/login', async (req, res) => {
       req.session.admin = true;
       res.redirect('/dashboard');
     } else {
-      res.render('views/login', {
-        error: 'Login failed'
-      });
+      res.render('views/login', { error: 'Login failed' });
     }
   } else {
-    res.render('views/login', {
-      error: 'Login failed'
-    });
+    res.render('views/login', { error: 'Login failed' });
   }
 });
 
@@ -78,13 +66,13 @@ app.get('/dashboard', helpers.auth, async (req, res) => {
       socket.emit('containerUpdate', containerData);
     });
 
-    res.render('views/dashboard', { containerData: containerData });
+    res.render('views/dashboard', { containerData });
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred');
   }
 });
 
-server.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
