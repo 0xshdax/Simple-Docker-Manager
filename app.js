@@ -59,7 +59,7 @@ app.get('/dashboard', helpers.auth, async (req, res) => {
         containerData = updatedOutput;
         io.emit('containerUpdate', containerData);
       }
-    }, 8000);
+    }, 10000);
     
     io.setMaxListeners(20);
     io.on('connection', (socket) => {

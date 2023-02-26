@@ -24,7 +24,7 @@ socket.on('containerUpdate', function(containerData) {
         <td>${container.status}</td>
         <td>${container.ports}</td>
         <td>${container.name}</td>
-        <td>XXXXX</td>
+        <td>[<a href="/">STOP</a>] - [<a href="/">LOGS</a>]</td>
       `;
       table.appendChild(row);
     });
