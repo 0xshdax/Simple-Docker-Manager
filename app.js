@@ -63,7 +63,7 @@ app.get('/logout', (req, res) => {
 
 app.get('/dashboard', helpers.auth, async (req, res) => {
   try {
-    const containerData = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
+    let containerData = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
 
     setInterval(async () => {
       const updatedOutput = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
@@ -71,8 +71,9 @@ app.get('/dashboard', helpers.auth, async (req, res) => {
         containerData = updatedOutput;
         io.emit('containerUpdate', containerData);
       }
-    }, 6000);
-
+    }, 8000);
+    
+    io.setMaxListeners(20);
     io.on('connection', (socket) => {
       socket.emit('containerUpdate', containerData);
     });
@@ -83,21 +84,6 @@ app.get('/dashboard', helpers.auth, async (req, res) => {
     res.status(500).send('An error occurred');
   }
 });
-
-// app.get('/dashboard', helpers.auth, async (req, res) => {
-//   try {
-//     const containerData = await helpers.exec('docker ps -a --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
-
-//     io.on('connection', (socket) => {
-//       socket.emit('containerUpdate', containerData);
-//     });
-
-//     res.render('views/dashboard', { containerData: containerData });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('An error occurred');
-//   }
-// });
 
 server.listen(3000, () => {
   console.log('Example app listening on port 3000!');
