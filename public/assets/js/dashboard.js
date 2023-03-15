@@ -24,7 +24,13 @@ socket.on('containerUpdate', function(containerData) {
         <td>${container.status}</td>
         <td>${container.ports}</td>
         <td>${container.name}</td>
-        <td>[<a href="/">STOP</a>] - [<a href="/">LOGS</a>]</td>
+        <td>
+          <form method="post" action="/stop-container">
+            <input type="hidden" name="containerId" value="${container.id}">
+            [ <button style="color:#27f6a4;  border:0px; font-size: 16px; background-color: transparent;" type="submit">Stop</button> ]
+          </form>
+        </td>
+        <!-- <a href="/">STOP</a>] - [<a href="/">LOGS</a>]</td> -->
       `;
       table.appendChild(row);
     });

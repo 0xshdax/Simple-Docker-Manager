@@ -20,9 +20,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({ secret, resave: true, saveUninitialized: true }));
 
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
   if (req.session.admin === true) {
-    res.redirect('/dashboard');
+    res.redirect('/');
   } else {
     res.render('views/login');
   }
@@ -35,7 +35,7 @@ app.post('/login', async (req, res) => {
     if (await bcrypt.compare(password, hashedPassword)) {
       req.session.user = 'admin';
       req.session.admin = true;
-      res.redirect('/dashboard');
+      res.redirect('/');
     } else {
       res.render('views/login', { error: 'Login failed' });
     }
@@ -44,33 +44,55 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
+app.get('/', helpers.auth, async (req, res) => {
+  if (req.session.admin === true) {
+    try {
+      let containerData = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
+  
+      setInterval(async () => {
+        const updatedOutput = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
+        if (updatedOutput !== containerData) {
+          containerData = updatedOutput;
+          io.emit('containerUpdate', containerData);
+        }
+      }, 10000);
+      
+      io.setMaxListeners(20);
+      io.on('connection', (socket) => {
+        socket.emit('containerUpdate', containerData);
+      });
+  
+      res.render('views/dashboard', { containerData });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred');
+    }
+  } else {
+    res.render('views/login');
+  }
 });
 
-app.get('/dashboard', helpers.auth, async (req, res) => {
+app.get('/about', helpers.auth, async (req, res) => {
+  res.render('views/about');
+});
+
+app.post('/stop-container', helpers.auth, async (req, res) => {
+  const containerId = req.params.containerId;
   try {
-    let containerData = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
-
-    setInterval(async () => {
-      const updatedOutput = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
-      if (updatedOutput !== containerData) {
-        containerData = updatedOutput;
-        io.emit('containerUpdate', containerData);
-      }
-    }, 10000);
-    
-    io.setMaxListeners(20);
-    io.on('connection', (socket) => {
-      socket.emit('containerUpdate', containerData);
-    });
-
-    res.render('views/dashboard', { containerData });
+    if (!/^[a-f0-9]{12}$/.test(containerId)) {
+      res.status(500).send('An error occurred');
+    }
+    await helpers.exec(['docker', 'stop', containerId]);
+    res.redirect('/dashboard');
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred');
   }
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/');
 });
 
 server.listen(port, () => {
