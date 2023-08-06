@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SDM - Containers</title>
+    <meta charset="utf-8">
+    <meta content="Rafshanzani Suhada" name="author">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/images/icons8-docker-480.png" type="image/x-icon" rel="icon">
+    <link href="/assets/css/style.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="main">
+        <div id="nav">
+            [<a href="/">Dashboard</a>] -
+            [<a href="/containers-running/" style="background-color: #406280;">Containers</a>] -
+            [<a href="/images/">Images</a>] -
+            [<a href="/about/">About</a>] -
+            [<a href="/logout/">Log out</a>]
+        </div>
+        <div id="content-left">Status: 
+            [<a href="/containers-running/">Running</a>] -
+            [<a href="/containers-stopped/" style="background-color: #406280;">Stopped</a>]
+            <table id="container-table">
+                <thead>
+                    <tr>
+                        <th colspan="6">Docker containers</th>
+                    </tr>
+                    <tr>
+                        <th>Container ID</th>
+                        <th>Image</th>
+                        <th>Status</th>
+                        <th>Ports</th>
+                        <th>Container Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="container-table-body">
+                    <tr>
+                        <td colspan="6">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="footer">
+        <p style="color:white;">© SDM 2023 - Made by <a href="https://github.com/0xshdax" style="color:white;">Rafshanzani Suhada</a></p>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/js/containers-stopped.js"></script>
+    <script>
+        function stopContainer() {
+          const form = document.getElementById("stopContainerForm");
+          const containerId = document.querySelector('#stopContainerForm input[name="containerId"]').value;
+          
+          fetch("/stop-container", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `containerId=${encodeURIComponent(containerId)}`
+          })
+          .then(response => response.text())
+          .then(result => {
+            console.log(result); 
+          })
+          .catch(error => {
+            console.error(error);
+          });
+        }
+    </script>
+</body>
+</html>

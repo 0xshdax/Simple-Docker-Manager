@@ -46,29 +46,57 @@ app.post('/login', async (req, res) => {
 
 app.get('/', helpers.auth, async (req, res) => {
   if (req.session.admin === true) {
-    try {
-      let containerData = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
-  
-      setInterval(async () => {
-        const updatedOutput = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
-        if (updatedOutput !== containerData) {
-          containerData = updatedOutput;
-          io.emit('containerUpdate', containerData);
-        }
-      }, 10000);
-      
-      io.setMaxListeners(20);
-      io.on('connection', (socket) => {
-        socket.emit('containerUpdate', containerData);
-      });
-  
-      res.render('views/dashboard', { containerData });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('An error occurred');
-    }
+    res.render('views/dashboard')
   } else {
     res.render('views/login');
+  }
+});
+
+app.get('/containers-running', helpers.auth, async (req, res) => {
+  try {
+    let containerRun = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
+
+    setInterval(async () => {
+      const updatedRunOutput = await helpers.exec('docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
+      if (updatedRunOutput !== containerRun) {
+        containerRun = updatedRunOutput;
+        io.emit('updatedRunOutput', containerRun);
+      }
+    }, 10000);
+    
+    io.setMaxListeners(5);
+    io.on('connection', (socket) => {
+      socket.emit('updatedRunOutput', containerRun);
+    });
+
+    res.render('views/containers-running', { containerRun });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  }
+});
+
+app.get('/containers-stopped', helpers.auth, async (req, res) => {
+  try {
+    let containerStop = await helpers.exec('docker ps -a --filter status=exited --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
+
+    setInterval(async () => {
+      const updatedStopOutput = await helpers.exec('docker ps -a --filter status=exited --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"');
+      if (updatedStopOutput !== containerStop) {
+        containerStop = updatedStopOutput;
+        io.emit('updatedStopOutput', containerStop);
+      }
+    }, 10000);
+    
+    io.setMaxListeners(5);
+    io.on('connection', (socket) => {
+      socket.emit('updatedStopOutput', containerStop);
+    });
+
+    res.render('views/containers-stopped', { containerStop });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred');
   }
 });
 
@@ -77,13 +105,13 @@ app.get('/about', helpers.auth, async (req, res) => {
 });
 
 app.post('/stop-container', helpers.auth, async (req, res) => {
-  const containerId = req.params.containerId;
+  const containerId = req.body.containerId;
+  if (!/^[a-f0-9]{12}$/.test(containerId)) {
+    return res.status(400).send('Invalid container ID format');
+  }
   try {
-    if (!/^[a-f0-9]{12}$/.test(containerId)) {
-      res.status(500).send('An error occurred');
-    }
-    await helpers.exec(['docker', 'stop', containerId]);
-    res.redirect('/dashboard');
+    await helpers.exec(`docker stop ${containerId}`);
+    res.redirect('/containers-running');
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred');

@@ -14,38 +14,18 @@
     <div id="main">
         <div id="nav">
             [<a href="/" style="background-color: #406280;">Dashboard</a>] -
+            [<a href="/containers-running/">Containers</a>] -
+            [<a href="/images/">Images</a>] -
             [<a href="/about/">About</a>] -
-            [<a href="/logout">Log out</a>]
+            [<a href="/logout/">Log out</a>]
         </div>
         <div id="content-left">
-            [<a href="/#" style="background-color: #406280;">Running</a>] -
-            [<a href="/#">Stopped</a>]
-            <table id="container-table">
-                <thead>
-                    <tr>
-                        <th colspan="6">Docker containers</th>
-                    </tr>
-                    <tr>
-                        <th>Container ID</th>
-                        <th>Image</th>
-                        <th>Status</th>
-                        <th>Ports</th>
-                        <th>Container Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="container-table-body">
-                    <tr>
-                        <td colspan="6">Loading...</td>
-                    </tr>
-                </tbody>
-            </table>
+            Welcome
         </div>
     </div>
     <div id="footer">
         <p style="color:white;">© SDM 2023 - Made by <a href="https://github.com/0xshdax" style="color:white;">Rafshanzani Suhada</a></p>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/assets/js/dashboard.js"></script>
 </body>
 </html>
